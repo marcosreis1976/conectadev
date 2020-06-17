@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import { useNavigate } from 'react-router-dom';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import axios from '../../utils/axios';
 
 
 const useStyles = makeStyles ((theme) => ({
@@ -59,6 +60,16 @@ function Copyright() {
 
 function SignIn () {
     const classes = useStyles();
+    const navigate = useNavigate();
+
+    function handleSignin() {
+        //chamada a api
+        //se retorno ok, direciona para a home
+        //senão, exibe mensagem para o usuário
+        axios.post('/api/home/login')
+            .then(response => console.log(response));
+    }
+
     return (
         <Grid container className={classes.root}>
             <Grid
