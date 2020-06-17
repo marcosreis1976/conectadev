@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import { useNavigate } from 'react-router-dom';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import axios from '../../utils/axios';
+import authservice from '../../services/authService';
 
 
 const useStyles = makeStyles ((theme) => ({
@@ -57,17 +57,24 @@ function Copyright() {
     );
   }
   
-
 function SignIn () {
     const classes = useStyles();
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
-    function handleSignin() {
+    async function handleSignIn() {
         //chamada a api
         //se retorno ok, direciona para a home
         //senão, exibe mensagem para o usuário
-        axios.post('/api/home/login')
-            .then(response => console.log(response));
+        try {
+            await authservice.signin(email, password);
+            navigate('/');
+        }
+        catch (error) {
+            setErrorMessage(error.response.data.message);
+        }
     }
 
     return (
@@ -118,6 +125,8 @@ function SignIn () {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
                     />
                     <TextField
                         variant="outlined"
@@ -129,16 +138,21 @@ function SignIn () {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
                     />
                     <Button
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.button}
-                        
-                    >
+                        onClick={handleSignIn}
+                        >
                         Entrar
-                    </Button>
+                        </Button>
+                        {errorMessage && (
+                        <FormHelperText error>{errorMessage}</FormHelperText>
+                        )}
                     <Grid container>
                         <Grid item>
                             <Link>Esqueceu sua senha?</Link>
