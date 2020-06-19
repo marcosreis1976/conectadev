@@ -18,6 +18,7 @@ mock.onPost('/api/home/login').reply((config) => {
         name: 'Marcos Reis',
         username: 'marcos.reis',
         email: 'marcosaurelio@eris.net.br',
+        avatar: '/images/avatars/avatar_1.jpeg',
     }
 
     return [200, {user}];

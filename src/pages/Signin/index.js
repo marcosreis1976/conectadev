@@ -10,7 +10,9 @@ import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import { useNavigate } from 'react-router-dom';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import authservice from '../../services/authService';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { signIn } from '../../actions/accountActions';
 
 
 const useStyles = makeStyles ((theme) => ({
@@ -63,16 +65,13 @@ function SignIn () {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-
+    const dispatch = useDispatch();
+    
     async function handleSignIn() {
-        //chamada a api
-        //se retorno ok, direciona para a home
-        //senão, exibe mensagem para o usuário
         try {
-            await authservice.signin(email, password);
+            await dispatch(signIn(email, password));
             navigate('/');
-        }
-        catch (error) {
+        } catch (error) {
             setErrorMessage(error.response.data.message);
         }
     }
